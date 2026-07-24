@@ -104,6 +104,18 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
+    public ResponseEntity<EmployeeResponse> getMinMaxAge(Integer minage, Integer maxage){
+        List<Employee> le=repository.findAll();
+        ArrayList<Employee> ale=new ArrayList<>();
+
+        le.stream().filter(emp -> emp.getAge()>=minage && emp.getAge()<=maxage).forEach(emp -> ale.add(emp));
+
+        EmployeeResponse er=new EmployeeResponse();
+        er.setAle(ale);
+        er.setMessage("These are the employees with age between "+minage+" and "+maxage);
+        return ResponseEntity.status(HttpStatus.OK).body(er);
+    }
+
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 
         if(employee.getEmpid()==null || employee.getName()==null || employee.getAge()==null || employee.getGender()==null || employee.getAddress()==null || employee.getTelephoneno()==null || employee.getAnnualincome()==null || employee.getDeptid()==null || employee.getProjectid()==null){
