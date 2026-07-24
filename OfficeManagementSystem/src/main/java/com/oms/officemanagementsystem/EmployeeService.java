@@ -4,6 +4,7 @@ package com.oms.officemanagementsystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +92,17 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
+    public ResponseEntity<EmployeeResponse> getMinSalary(Integer minSalary){
+        List<Employee> le=repository.findAll();
+        ArrayList<Employee> ale=new ArrayList<>();
+
+        le.stream().filter(emp -> emp.getAnnualincome()>=minSalary).forEach(emp -> ale.add(emp));
+
+        EmployeeResponse er=new EmployeeResponse();
+        er.setAle(ale);
+        er.setMessage("These are the employees with salary >= "+minSalary);
+        return ResponseEntity.status(HttpStatus.OK).body(er);
+    }
 
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 

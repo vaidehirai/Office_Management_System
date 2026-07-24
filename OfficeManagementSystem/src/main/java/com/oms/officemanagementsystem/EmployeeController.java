@@ -33,6 +33,11 @@ public class EmployeeController {
         return service.getAllEmployeeData();
     }
 
+    @GetMapping("/salary")
+    public ResponseEntity<EmployeeResponse> getMinSalary(@RequestParam Integer minSalary){
+        return service.getMinSalary(minSalary);
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);
