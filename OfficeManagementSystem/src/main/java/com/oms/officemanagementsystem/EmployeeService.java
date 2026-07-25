@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,6 +114,18 @@ public class EmployeeService {
         EmployeeResponse er=new EmployeeResponse();
         er.setAle(ale);
         er.setMessage("These are the employees with age between "+minage+" and "+maxage);
+        return ResponseEntity.status(HttpStatus.OK).body(er);
+    }
+
+    public ResponseEntity<EmployeeResponse> getSalarySort(){
+        List<Employee> le=repository.findAll();
+        ArrayList<Employee> ale=new ArrayList<>();
+
+        le.stream().sorted(Comparator.comparingDouble(emp -> emp.getAnnualincome())).forEach(emp-> ale.add(emp));
+
+        EmployeeResponse er=new EmployeeResponse();
+        er.setAle(ale);
+        er.setMessage("Employees list with salary in sorted order");
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 

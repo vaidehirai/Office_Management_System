@@ -43,6 +43,11 @@ public class EmployeeController {
         return service.getMinMaxAge(min, max);
     }
 
+    @GetMapping("/salary/sort")
+    public ResponseEntity<EmployeeResponse> getSalarySort(){
+        return service.getSalarySort();
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);
