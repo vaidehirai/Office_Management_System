@@ -143,7 +143,6 @@ public class EmployeeService {
 
     public ResponseEntity<EmployeeResponse> getYoungestEmployee(){
         List<Employee> le=repository.findAll();
-        ArrayList<Employee> ale=new ArrayList<>();
 
         Optional<Employee> emp=le.stream().min(Comparator.comparing(Employee::getAge));
         Employee e=emp.get();
@@ -151,6 +150,18 @@ public class EmployeeService {
         EmployeeResponse er=new EmployeeResponse();
         er.getAle().add(e);
         er.setMessage("This is the youngest employee");
+        return ResponseEntity.status(HttpStatus.OK).body(er);
+    }
+
+    public ResponseEntity<EmployeeResponse> getOldestEmployee(){
+        List<Employee> le=repository.findAll();
+
+        Optional<Employee> emp=le.stream().max(Comparator.comparing(Employee::getAge));
+        Employee e=emp.get();
+
+        EmployeeResponse er=new EmployeeResponse();
+        er.getAle().add(e);
+        er.setMessage("This is the oldest employee");
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 

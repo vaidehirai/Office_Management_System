@@ -58,6 +58,11 @@ public class EmployeeController {
         return service.getYoungestEmployee();
     }
 
+    @GetMapping("/oldest")
+    public ResponseEntity<EmployeeResponse> getOldestEmployee(){
+        return service.getOldestEmployee();
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);
