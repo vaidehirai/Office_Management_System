@@ -141,6 +141,19 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
+    public ResponseEntity<EmployeeResponse> getYoungestEmployee(){
+        List<Employee> le=repository.findAll();
+        ArrayList<Employee> ale=new ArrayList<>();
+
+        Optional<Employee> emp=le.stream().min(Comparator.comparing(Employee::getAge));
+        Employee e=emp.get();
+
+        EmployeeResponse er=new EmployeeResponse();
+        er.getAle().add(e);
+        er.setMessage("This is the youngest employee");
+        return ResponseEntity.status(HttpStatus.OK).body(er);
+    }
+
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 
         if(employee.getEmpid()==null || employee.getName()==null || employee.getAge()==null || employee.getGender()==null || employee.getAddress()==null || employee.getTelephoneno()==null || employee.getAnnualincome()==null || employee.getDeptid()==null || employee.getProjectid()==null){
