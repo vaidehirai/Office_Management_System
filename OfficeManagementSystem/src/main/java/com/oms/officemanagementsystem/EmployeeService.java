@@ -129,6 +129,18 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
+    public ResponseEntity<EmployeeResponse> getTopSalary(Integer count){
+        List<Employee> le=repository.findAll();
+        ArrayList<Employee> ale=new ArrayList<>();
+
+        le.stream().sorted(Comparator.comparingDouble(Employee::getAnnualincome).reversed()).limit(count).forEach(emp-> ale.add(emp));
+
+        EmployeeResponse er=new EmployeeResponse();
+        er.setAle(ale);
+        er.setMessage("Employees list with top "+count+" salary");
+        return ResponseEntity.status(HttpStatus.OK).body(er);
+    }
+
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 
         if(employee.getEmpid()==null || employee.getName()==null || employee.getAge()==null || employee.getGender()==null || employee.getAddress()==null || employee.getTelephoneno()==null || employee.getAnnualincome()==null || employee.getDeptid()==null || employee.getProjectid()==null){

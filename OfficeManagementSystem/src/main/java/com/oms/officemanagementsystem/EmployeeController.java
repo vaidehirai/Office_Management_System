@@ -48,6 +48,11 @@ public class EmployeeController {
         return service.getSalarySort();
     }
 
+    @GetMapping("/top-salary")
+    public ResponseEntity<EmployeeResponse> getTopSalary(@RequestParam Integer count){
+        return service.getTopSalary(count);
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);
