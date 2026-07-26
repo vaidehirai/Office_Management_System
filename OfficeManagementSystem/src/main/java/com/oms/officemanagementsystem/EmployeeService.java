@@ -180,6 +180,21 @@ public class EmployeeService {
         }
     }
 
+    public ResponseEntity<APIResponse> getAdults(){
+        List<Employee> le=repository.findAll();
+
+        boolean result=le.stream().allMatch(emp -> emp.getAge()>=18);
+        APIResponse apir=new APIResponse();
+        if(result==true){
+            apir.setMessage("All employees are adults");
+            return ResponseEntity.status(HttpStatus.OK).body(apir);
+        }
+        else{
+            apir.setMessage("All employees are not adults");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
+        }
+    }
+
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 
         if(employee.getEmpid()==null || employee.getName()==null || employee.getAge()==null || employee.getGender()==null || employee.getAddress()==null || employee.getTelephoneno()==null || employee.getAnnualincome()==null || employee.getDeptid()==null || employee.getProjectid()==null){

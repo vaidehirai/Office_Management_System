@@ -68,6 +68,11 @@ public class EmployeeController {
         return service.getHighEarner(salary);
     }
 
+    @GetMapping("/adults")
+    public ResponseEntity<APIResponse> getAdults(){
+        return service.getAdults();
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);
