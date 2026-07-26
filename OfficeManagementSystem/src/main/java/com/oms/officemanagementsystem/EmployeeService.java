@@ -165,6 +165,21 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
+    public ResponseEntity<APIResponse> getHighEarner(Integer salary){
+        List<Employee> le=repository.findAll();
+
+        boolean result=le.stream().anyMatch(emp->emp.getAnnualincome().equals(salary));
+        APIResponse apir=new APIResponse();
+        if(result==true){
+            apir.setMessage("Employee with salary "+salary+" exist in the list");
+            return ResponseEntity.status(HttpStatus.OK).body(apir);
+        }
+        else{
+            apir.setMessage("Employee with salary "+salary+" does not exist in the list");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
+        }
+    }
+
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 
         if(employee.getEmpid()==null || employee.getName()==null || employee.getAge()==null || employee.getGender()==null || employee.getAddress()==null || employee.getTelephoneno()==null || employee.getAnnualincome()==null || employee.getDeptid()==null || employee.getProjectid()==null){
