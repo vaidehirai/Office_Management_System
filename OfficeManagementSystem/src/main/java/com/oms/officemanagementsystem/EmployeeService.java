@@ -208,14 +208,24 @@ public class EmployeeService {
         }
     }
 
-    public ResponseEntity<StResponse> getEmployeeNames(){
+    public ResponseEntity<StListResponse> getEmployeeNames(){
         List<Employee> le=repository.findAll();
         List<String> l=le.stream().map(emp->emp.getName().toUpperCase()).toList();
 
-        StResponse str=new StResponse();
+        StListResponse str=new StListResponse();
         str.setItems(l);
         str.setMessage("Employee names list");
         return ResponseEntity.status(HttpStatus.OK).body(str);
+    }
+
+    public ResponseEntity<IntListResponse> getEmployeesDistinctAges(){
+        List<Employee> le=repository.findAll();
+        List<Integer> li=le.stream().map(Employee::getAge).distinct().toList();
+
+        IntListResponse ilr=new IntListResponse();
+        ilr.setLint(li);
+        ilr.setMessage("List of distinct age of employees");
+        return ResponseEntity.status(HttpStatus.OK).body(ilr);
     }
 
     public ResponseEntity<APIResponse> createEmployee (Employee employee){

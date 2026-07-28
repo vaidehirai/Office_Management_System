@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class StResponse extends APIResponse {
+public class StListResponse extends APIResponse {
 
     private List<String> items;
 }

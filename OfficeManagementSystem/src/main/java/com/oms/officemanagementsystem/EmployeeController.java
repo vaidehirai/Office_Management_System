@@ -74,8 +74,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/names")
-    public ResponseEntity<StResponse> getEmployeeNames(){
+    public ResponseEntity<StListResponse> getEmployeeNames(){
         return service.getEmployeeNames();
+    }
+
+    @GetMapping("/distinct-ages")
+    public ResponseEntity<IntListResponse> getEmployeesDistinctAges(){
+        return service.getEmployeesDistinctAges();
     }
 
     @PostMapping
