@@ -13,6 +13,6 @@ import java.util.ArrayList;
 public class EmployeeResponse extends APIResponse{
 
     //private Employee employee;
-    ArrayList<Employee> ale=new ArrayList<>();
+    private ArrayList<Employee> ale;
 
 }

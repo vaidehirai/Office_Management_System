@@ -73,6 +73,11 @@ public class EmployeeController {
         return service.getAdults();
     }
 
+    @GetMapping("/names")
+    public ResponseEntity<StResponse> getEmployeeNames(){
+        return service.getEmployeeNames();
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);

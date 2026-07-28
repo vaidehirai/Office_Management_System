@@ -4,7 +4,6 @@ package com.oms.officemanagementsystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -145,6 +144,7 @@ public class EmployeeService {
         List<Employee> le=repository.findAll();
 
         Optional<Employee> emp=le.stream().min(Comparator.comparing(Employee::getAge));
+
         Employee e=emp.get();
 
         EmployeeResponse er=new EmployeeResponse();
@@ -185,7 +185,7 @@ public class EmployeeService {
 
         boolean result=le.stream().allMatch(emp -> emp.getAge()>=18);
         APIResponse apir=new APIResponse();
-        if(result==true){
+        if(result){
             apir.setMessage("All employees are adults");
             return ResponseEntity.status(HttpStatus.OK).body(apir);
         }
@@ -193,6 +193,16 @@ public class EmployeeService {
             apir.setMessage("All employees are not adults");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
+    }
+
+    public ResponseEntity<StResponse> getEmployeeNames(){
+        List<Employee> le=repository.findAll();
+        List<String> l=le.stream().map(emp->emp.getName().toUpperCase()).toList();
+
+        StResponse str=new StResponse();
+        str.setItems(l);
+        str.setMessage("Employee names list");
+        return ResponseEntity.status(HttpStatus.OK).body(str);
     }
 
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
