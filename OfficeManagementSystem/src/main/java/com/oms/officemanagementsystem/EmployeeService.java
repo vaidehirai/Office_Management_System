@@ -29,7 +29,7 @@ public class EmployeeService {
         if (emp.isPresent()) {
             Employee e=emp.get();
             EmployeeResponse er = new EmployeeResponse();
-            er.getAle().add(e);
+            er.setEmployee(e);
             er.setMessage("Employee details found");
             return ResponseEntity.status(HttpStatus.OK).body(er);
         } else {
@@ -53,7 +53,7 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            EmployeeResponse er=new EmployeeResponse();
+            EmployeeListResponse er=new EmployeeListResponse();
             er.setAle(aemp);
             er.setMessage("Employees with given department id found");
             return ResponseEntity.status(HttpStatus.OK).body(er);
@@ -76,93 +76,106 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            EmployeeResponse er=new EmployeeResponse();
+            EmployeeListResponse er=new EmployeeListResponse();
             er.setAle(aemp);
             er.setMessage("Employees with given project id found");
             return ResponseEntity.status(HttpStatus.OK).body(er);
         }
     }
 
-    public ResponseEntity<EmployeeResponse> getAllEmployeeData(){
+    public ResponseEntity<EmployeeListResponse> getAllEmployeeData(){
         List<Employee> le=repository.findAll();
         ArrayList<Employee> ale=new ArrayList<>(le);
 
-        EmployeeResponse er=new EmployeeResponse(ale);
+        EmployeeListResponse er=new EmployeeListResponse();
+        er.setAle(ale);
         er.setMessage("All employee details found");
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getMinSalary(Integer minSalary){
+    public ResponseEntity<EmployeeListResponse> getSalaryAboveMinSalary(Integer minSalary){
         List<Employee> le=repository.findAll();
         ArrayList<Employee> ale=new ArrayList<>();
 
         le.stream().filter(emp -> emp.getAnnualincome()>=minSalary).forEach(emp -> ale.add(emp));
 
-        EmployeeResponse er=new EmployeeResponse();
+        EmployeeListResponse er=new EmployeeListResponse();
         er.setAle(ale);
         er.setMessage("These are the employees with salary >= "+minSalary);
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getMinMaxAge(Integer minage, Integer maxage){
+    public ResponseEntity<EmployeeListResponse> getEmployeesBetweenMinMaxAge(Integer minage, Integer maxage){
         List<Employee> le=repository.findAll();
         ArrayList<Employee> ale=new ArrayList<>();
 
         le.stream().filter(emp -> emp.getAge()>=minage && emp.getAge()<=maxage).forEach(emp -> ale.add(emp));
 
-        EmployeeResponse er=new EmployeeResponse();
+        EmployeeListResponse er=new EmployeeListResponse();
         er.setAle(ale);
         er.setMessage("These are the employees with age between "+minage+" and "+maxage);
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getSalarySort(){
+    public ResponseEntity<EmployeeListResponse> getSalarySort(){
         List<Employee> le=repository.findAll();
         ArrayList<Employee> ale=new ArrayList<>();
 
         le.stream().sorted(Comparator.comparingDouble(emp -> emp.getAnnualincome())).forEach(emp-> ale.add(emp));
 
-        EmployeeResponse er=new EmployeeResponse();
+        EmployeeListResponse er=new EmployeeListResponse();
         er.setAle(ale);
         er.setMessage("Employees list with salary in sorted order");
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getTopSalary(Integer count){
+    public ResponseEntity<EmployeeListResponse> getTopSalaryEmployees(Integer count){
         List<Employee> le=repository.findAll();
         ArrayList<Employee> ale=new ArrayList<>();
 
         le.stream().sorted(Comparator.comparingDouble(Employee::getAnnualincome).reversed()).limit(count).forEach(emp-> ale.add(emp));
 
-        EmployeeResponse er=new EmployeeResponse();
+        EmployeeListResponse er=new EmployeeListResponse();
         er.setAle(ale);
         er.setMessage("Employees list with top "+count+" salary");
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getYoungestEmployee(){
+    public ResponseEntity<APIResponse> getYoungestEmployee(){
         List<Employee> le=repository.findAll();
 
         Optional<Employee> emp=le.stream().min(Comparator.comparing(Employee::getAge));
+        if(emp.isPresent()){
+            Employee e=emp.get();
+            EmployeeResponse er=new EmployeeResponse();
+            er.setEmployee(e);
+            er.setMessage("This is the youngest employee");
+            return ResponseEntity.status(HttpStatus.OK).body(er);
+        }
+        else{
+            APIResponse apir=new APIResponse();
+            apir.setMessage("There is no youngest employee");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
+        }
 
-        Employee e=emp.get();
-
-        EmployeeResponse er=new EmployeeResponse();
-        er.getAle().add(e);
-        er.setMessage("This is the youngest employee");
-        return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getOldestEmployee(){
+    public ResponseEntity<APIResponse> getOldestEmployee(){
         List<Employee> le=repository.findAll();
 
         Optional<Employee> emp=le.stream().max(Comparator.comparing(Employee::getAge));
-        Employee e=emp.get();
-
-        EmployeeResponse er=new EmployeeResponse();
-        er.getAle().add(e);
-        er.setMessage("This is the oldest employee");
-        return ResponseEntity.status(HttpStatus.OK).body(er);
+        if(emp.isPresent()){
+            Employee e=emp.get();
+            EmployeeResponse er=new EmployeeResponse();
+            er.setEmployee(e);
+            er.setMessage("This is the oldest employee");
+            return ResponseEntity.status(HttpStatus.OK).body(er);
+        }
+        else{
+            APIResponse apir=new APIResponse();
+            apir.setMessage("There is no oldest employee");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
+        }
     }
 
     public ResponseEntity<APIResponse> getHighEarner(Integer salary){
@@ -215,7 +228,7 @@ public class EmployeeService {
         else{
             repository.save(employee);
             EmployeeResponse er = new EmployeeResponse();
-            er.getAle().add(employee);
+            er.setEmployee(employee);
             er.setMessage("Employee created");
             return ResponseEntity.status(HttpStatus.CREATED).body(er);
         }
@@ -237,7 +250,7 @@ public class EmployeeService {
 
             repository.save(e2);
             EmployeeResponse er=new EmployeeResponse();
-            er.getAle().add(e2);
+            er.setEmployee(e2);
             er.setMessage("Employee updated");
             return ResponseEntity.status(HttpStatus.OK).body(er);
         }

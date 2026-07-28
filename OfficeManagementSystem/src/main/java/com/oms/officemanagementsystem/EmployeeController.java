@@ -29,37 +29,37 @@ public class EmployeeController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<EmployeeResponse> getAllEmployeeData(){
+    public ResponseEntity<EmployeeListResponse> getAllEmployeeData(){
         return service.getAllEmployeeData();
     }
 
     @GetMapping("/salary")
-    public ResponseEntity<EmployeeResponse> getMinSalary(@RequestParam Integer minSalary){
-        return service.getMinSalary(minSalary);
+    public ResponseEntity<EmployeeListResponse> getSalaryAboveMinSalary(@RequestParam Integer minSalary){
+        return service.getSalaryAboveMinSalary(minSalary);
     }
 
     @GetMapping("/age")
-    public ResponseEntity<EmployeeResponse> getMinMaxAge(@RequestParam Integer min, Integer max){
-        return service.getMinMaxAge(min, max);
+    public ResponseEntity<EmployeeListResponse> getEmployeesBetweenMinMaxAge(@RequestParam Integer min, Integer max){
+        return service.getEmployeesBetweenMinMaxAge(min, max);
     }
 
     @GetMapping("/salary/sort")
-    public ResponseEntity<EmployeeResponse> getSalarySort(){
+    public ResponseEntity<EmployeeListResponse> getSalarySort(){
         return service.getSalarySort();
     }
 
     @GetMapping("/top-salary")
-    public ResponseEntity<EmployeeResponse> getTopSalary(@RequestParam Integer count){
-        return service.getTopSalary(count);
+    public ResponseEntity<EmployeeListResponse> getTopSalaryEmployees(@RequestParam Integer count){
+        return service.getTopSalaryEmployees(count);
     }
 
     @GetMapping("/youngest")
-    public ResponseEntity<EmployeeResponse> getYoungestEmployee(){
+    public ResponseEntity<APIResponse> getYoungestEmployee(){
         return service.getYoungestEmployee();
     }
 
     @GetMapping("/oldest")
-    public ResponseEntity<EmployeeResponse> getOldestEmployee(){
+    public ResponseEntity<APIResponse> getOldestEmployee(){
         return service.getOldestEmployee();
     }
 
