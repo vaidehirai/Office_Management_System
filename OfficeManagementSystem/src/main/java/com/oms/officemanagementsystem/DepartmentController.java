@@ -33,6 +33,11 @@ public class DepartmentController {
         return service.getAllDepartments();
     }
 
+    @GetMapping("/names")
+    public ResponseEntity<StResponse> getDepartmentNames(){
+        return service.getDepartmentNames();
+    }
+
     @PostMapping
     public ResponseEntity<APIResponse> createDepartment(@RequestBody Department dept){
         return service.createDepartment(dept);

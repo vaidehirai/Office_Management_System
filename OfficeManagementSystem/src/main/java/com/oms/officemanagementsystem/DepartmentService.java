@@ -92,6 +92,17 @@ public class DepartmentService {
         return ResponseEntity.status(HttpStatus.OK).body(dlr);
     }
 
+    public ResponseEntity<StResponse> getDepartmentNames(){
+        List<Department> ld=repository.findAll();
+        
+        List<String> ls=ld.stream().map(dept -> dept.getName().toUpperCase()).toList();
+
+        StResponse str=new StResponse();
+        str.setItems(ls);
+        str.setMessage("Department names list");
+        return ResponseEntity.status(HttpStatus.OK).body(str);
+    }
+
     public ResponseEntity<APIResponse> createDepartment(Department dept){
 
         if(dept.getDeptid()==null || dept.getName()==null || dept.getCode()==null){
