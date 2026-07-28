@@ -34,7 +34,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/names")
-    public ResponseEntity<StResponse> getDepartmentNames(){
+    public ResponseEntity<StListResponse> getDepartmentNames(){
         return service.getDepartmentNames();
     }
 
