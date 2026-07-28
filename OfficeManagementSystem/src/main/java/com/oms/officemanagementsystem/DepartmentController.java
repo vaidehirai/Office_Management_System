@@ -29,7 +29,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<DepartmentResponse> getAllDepartments(){
+    public ResponseEntity<DepartmentListResponse> getAllDepartments(){
         return service.getAllDepartments();
     }
 

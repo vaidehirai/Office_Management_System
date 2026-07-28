@@ -23,7 +23,7 @@ public class DepartmentService {
         if(dept.isPresent()){
             Department d=dept.get();
             DepartmentResponse dr=new DepartmentResponse();
-            dr.getAld().add(d);
+            dr.setDepartment(d);
             dr.setMessage("Department details found");
             return ResponseEntity.status(HttpStatus.OK).body(dr);
         }
@@ -52,10 +52,10 @@ public class DepartmentService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            DepartmentResponse dr=new DepartmentResponse();
-            dr.setAld(aldept);
-            dr.setMessage("Departments with given department name found");
-            return ResponseEntity.status(HttpStatus.OK).body(dr);
+            DepartmentListResponse dlr=new DepartmentListResponse();
+            dlr.setAld(aldept);
+            dlr.setMessage("Departments with given department name found");
+            return ResponseEntity.status(HttpStatus.OK).body(dlr);
         }
     }
 
@@ -76,20 +76,20 @@ public class DepartmentService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            DepartmentResponse dr=new DepartmentResponse();
-            dr.setAld(aldept);
-            dr.setMessage("Departments with given department code found");
-            return ResponseEntity.status(HttpStatus.OK).body(dr);
+            DepartmentListResponse dlr=new DepartmentListResponse();
+            dlr.setAld(aldept);
+            dlr.setMessage("Departments with given department code found");
+            return ResponseEntity.status(HttpStatus.OK).body(dlr);
         }
     }
 
-    public ResponseEntity<DepartmentResponse> getAllDepartments(){
+    public ResponseEntity<DepartmentListResponse> getAllDepartments(){
         List<Department> ld=repository.findAll();
         ArrayList<Department> ald=new ArrayList<>(ld);
 
-        DepartmentResponse dr=new DepartmentResponse(ald);
-        dr.setMessage("All department details found");
-        return ResponseEntity.status(HttpStatus.OK).body(dr);
+        DepartmentListResponse dlr=new DepartmentListResponse(ald);
+        dlr.setMessage("All department details found");
+        return ResponseEntity.status(HttpStatus.OK).body(dlr);
     }
 
     public ResponseEntity<APIResponse> createDepartment(Department dept){
@@ -102,7 +102,7 @@ public class DepartmentService {
         else{
             repository.save(dept);
             DepartmentResponse dr=new DepartmentResponse();
-            dr.getAld().add(dept);
+            dr.setDepartment(dept);
             dr.setMessage("New department created");
             return ResponseEntity.status(HttpStatus.CREATED).body(dr);
         }
@@ -119,7 +119,7 @@ public class DepartmentService {
 
             repository.save(d2);
             DepartmentResponse dr=new DepartmentResponse();
-            dr.getAld().add(d2);
+            dr.setDepartment(d2);
             dr.setMessage("Name of department with id "+dept.getDeptid()+" updated");
             return ResponseEntity.status(HttpStatus.OK).body(dr);
         }
