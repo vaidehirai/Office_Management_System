@@ -11,14 +11,16 @@ import java.util.Optional;
 @Service
 public class DepartmentService {
 
-    private final DepartmentRepository repository;
+    private final DepartmentRepository deptrepository;
+    private final EmployeeRepository emprepository;
 
-    public DepartmentService(DepartmentRepository repository){
-        this.repository=repository;
+    public DepartmentService(DepartmentRepository deptrepository, EmployeeRepository emprepository){
+        this.deptrepository = deptrepository;
+        this.emprepository=emprepository;
     }
 
     public ResponseEntity<APIResponse> getDepartment(Integer id){
-        Optional<Department> dept=repository.findById(id);
+        Optional<Department> dept= deptrepository.findById(id);
 
         if(dept.isPresent()){
             Department d=dept.get();
@@ -37,8 +39,8 @@ public class DepartmentService {
     public ResponseEntity<APIResponse> getDepartmentDeptname(String name){
 
         ArrayList<Department> aldept=new ArrayList<>();
-        for(int i=1;i<=repository.count();i++){
-            Optional<Department> dep=repository.findById(i);
+        for(int i = 1; i<= deptrepository.count(); i++){
+            Optional<Department> dep= deptrepository.findById(i);
             Department dep2=dep.get();
 
             if (dep2.getName().equals(name)){
@@ -61,8 +63,8 @@ public class DepartmentService {
 
     public ResponseEntity<APIResponse> getDepartmentDeptcode(String code){
         ArrayList<Department> aldept=new ArrayList<>();
-        for(int i=1;i<=repository.count();i++){
-            Optional<Department> dep=repository.findById(i);
+        for(int i = 1; i<= deptrepository.count(); i++){
+            Optional<Department> dep= deptrepository.findById(i);
             Department dep2=dep.get();
 
             if (dep2.getCode().equals(code)){
@@ -84,7 +86,7 @@ public class DepartmentService {
     }
 
     public ResponseEntity<DepartmentListResponse> getAllDepartments(){
-        List<Department> ld=repository.findAll();
+        List<Department> ld= deptrepository.findAll();
         ArrayList<Department> ald=new ArrayList<>(ld);
 
         DepartmentListResponse dlr=new DepartmentListResponse(ald);
@@ -93,7 +95,7 @@ public class DepartmentService {
     }
 
     public ResponseEntity<StListResponse> getDepartmentNames(){
-        List<Department> ld=repository.findAll();
+        List<Department> ld= deptrepository.findAll();
 
         List<String> ls=ld.stream().map(dept -> dept.getName().toUpperCase()).toList();
 
@@ -101,6 +103,17 @@ public class DepartmentService {
         str.setItems(ls);
         str.setMessage("Department names list");
         return ResponseEntity.status(HttpStatus.OK).body(str);
+    }
+
+    public ResponseEntity<LongResponse> getDepartmentWiseEmployeeCount(Integer deptid){
+        List<Employee> le=emprepository.findAll();
+
+        Long empcount=le.stream().filter(emp->emp.getDeptid()==deptid).count();
+
+        LongResponse lr=new LongResponse();
+        lr.setCount(empcount);
+        lr.setMessage("Count of employees belonging to given department id");
+        return ResponseEntity.status(HttpStatus.OK).body(lr);
     }
 
     public ResponseEntity<APIResponse> createDepartment(Department dept){
@@ -111,7 +124,7 @@ public class DepartmentService {
             return ResponseEntity.status(HttpStatus.OK).body(apir);
         }
         else{
-            repository.save(dept);
+            deptrepository.save(dept);
             DepartmentResponse dr=new DepartmentResponse();
             dr.setDepartment(dept);
             dr.setMessage("New department created");
@@ -121,14 +134,14 @@ public class DepartmentService {
     }
 
     public ResponseEntity<APIResponse> updateDepartment(Department dept){
-        Optional<Department> d1=repository.findById(dept.getDeptid());
+        Optional<Department> d1= deptrepository.findById(dept.getDeptid());
 
         if(d1.isPresent()){
             Department d2=d1.get();
             d2.setName(dept.getName());
             d2.setCode(dept.getCode());
 
-            repository.save(d2);
+            deptrepository.save(d2);
             DepartmentResponse dr=new DepartmentResponse();
             dr.setDepartment(d2);
             dr.setMessage("Name of department with id "+dept.getDeptid()+" updated");
@@ -142,11 +155,11 @@ public class DepartmentService {
     }
 
     public ResponseEntity<APIResponse> deleteDepartment(Department dept){
-        Optional<Department> d =repository.findById(dept.getDeptid());
+        Optional<Department> d = deptrepository.findById(dept.getDeptid());
         APIResponse apir=new APIResponse();
 
         if(d.isPresent()){
-            repository.delete(d.get());
+            deptrepository.delete(d.get());
             apir.setMessage("Department with the given id deleted");
             return ResponseEntity.status(HttpStatus.OK).body(apir);
         }

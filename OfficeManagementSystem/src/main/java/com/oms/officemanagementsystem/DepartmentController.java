@@ -38,6 +38,11 @@ public class DepartmentController {
         return service.getDepartmentNames();
     }
 
+    @GetMapping("/employee-count")
+    public ResponseEntity<LongResponse> getDepartmentWiseEmployeeCount(@RequestParam Integer deptid){
+        return service.getDepartmentWiseEmployeeCount(deptid);
+    }
+
     @PostMapping
     public ResponseEntity<APIResponse> createDepartment(@RequestBody Department dept){
         return service.createDepartment(dept);
