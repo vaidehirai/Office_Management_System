@@ -36,7 +36,7 @@ public class ProjectController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ProjectResponse> getAllProjectDetails(){
+    public ResponseEntity<ProjectListResponse> getAllProjectDetails(){
         return service.getAllProjectDetails();
     }
 

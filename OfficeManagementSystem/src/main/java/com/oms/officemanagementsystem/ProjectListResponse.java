@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ProjectResponse extends APIResponse{
+public class ProjectListResponse extends APIResponse{
 
-    private Project project;
+    private ArrayList<Project> alp;
 }
