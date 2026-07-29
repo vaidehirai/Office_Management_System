@@ -34,7 +34,7 @@ public class AssetController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<AssetResponse> getAllAssets(){
+    public ResponseEntity<AssetListResponse> getAllAssets(){
         return service.getAllAssets();
     }
 

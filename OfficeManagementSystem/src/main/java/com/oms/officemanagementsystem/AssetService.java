@@ -24,7 +24,7 @@ public class AssetService {
             AssetResponse ar=new AssetResponse();
             Asset ast=a1.get();
 
-            ar.getAssetlist().add(ast);
+            ar.setAsset(ast);
             ar.setMessage("Asset found successfully");
             return ResponseEntity.status(HttpStatus.OK).body(ar);
         }
@@ -49,7 +49,7 @@ public class AssetService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            AssetResponse ar=new AssetResponse();
+            AssetListResponse ar=new AssetListResponse();
             ar.setAssetlist(ala);
             ar.setMessage("Assets of given asset name found");
             return ResponseEntity.status(HttpStatus.OK).body(ar);
@@ -73,7 +73,7 @@ public class AssetService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            AssetResponse ar=new AssetResponse();
+            AssetListResponse ar=new AssetListResponse();
             ar.setAssetlist(ala);
             ar.setMessage("Assets of given asset value found");
             return ResponseEntity.status(HttpStatus.OK).body(ar);
@@ -97,20 +97,20 @@ public class AssetService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            AssetResponse ar=new AssetResponse();
+            AssetListResponse ar=new AssetListResponse();
             ar.setAssetlist(ala);
             ar.setMessage("Assets of given employee id found");
             return ResponseEntity.status(HttpStatus.OK).body(ar);
         }
     }
 
-    public ResponseEntity<AssetResponse> getAllAssets(){
+    public ResponseEntity<AssetListResponse> getAllAssets(){
 
         List<Asset> la=repository.findAll();
         ArrayList<Asset> ala=new ArrayList<>(la);
 
-        AssetResponse ar=new AssetResponse();
-        ar.assetlist=ala;
+        AssetListResponse ar=new AssetListResponse();
+        ar.setAssetlist(ala);
         ar.setMessage("All assets found");
         return ResponseEntity.status(HttpStatus.OK).body(ar);
     }
@@ -125,7 +125,7 @@ public class AssetService {
         else{
             repository.save(asset);
             AssetResponse ar=new AssetResponse();
-            ar.assetlist.add(asset);
+            ar.setAsset(asset);
             ar.setMessage("New asset entry created");
             return ResponseEntity.status(HttpStatus.CREATED).body(ar);
         }
