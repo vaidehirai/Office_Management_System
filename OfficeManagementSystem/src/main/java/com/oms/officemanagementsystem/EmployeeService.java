@@ -4,6 +4,7 @@ package com.oms.officemanagementsystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -226,6 +227,17 @@ public class EmployeeService {
         ilr.setLint(li);
         ilr.setMessage("List of distinct age of employees");
         return ResponseEntity.status(HttpStatus.OK).body(ilr);
+    }
+
+    public ResponseEntity<LongResponse> getCountByGender(String gender){
+        List<Employee> le=repository.findAll();
+
+        Long gendercount=le.stream().filter(emp->emp.getGender().equals(gender)).count();
+
+        LongResponse lr=new LongResponse();
+        lr.setCount(gendercount);
+        lr.setMessage("No. of "+gender+" employees are: "+gendercount);
+        return ResponseEntity.status(HttpStatus.OK).body(lr);
     }
 
     public ResponseEntity<APIResponse> createEmployee (Employee employee){

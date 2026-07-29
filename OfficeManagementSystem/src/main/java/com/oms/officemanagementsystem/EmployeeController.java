@@ -83,6 +83,11 @@ public class EmployeeController {
         return service.getEmployeesDistinctAges();
     }
 
+    @GetMapping("/count-by-gender")
+    public ResponseEntity<LongResponse> getCountByGender(@RequestParam String gender){
+        return service.getCountByGender(gender);
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);
