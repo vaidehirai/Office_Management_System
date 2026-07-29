@@ -41,7 +41,7 @@ public class LeaveController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<LeaveResponse> getAllLeaveDetails(){
+    public ResponseEntity<LeaveListResponse> getAllLeaveDetails(){
         return leaveService.getAllLeaveDetails();
     }
 

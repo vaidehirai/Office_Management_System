@@ -25,7 +25,7 @@ public class LeaveService {
             Leave l=leave.get();
 
             LeaveResponse lr=new LeaveResponse();
-            lr.getAl().add(l);
+            lr.setLeave(l);
             lr.setMessage("Leave details found");
             return ResponseEntity.status(HttpStatus.OK).body(lr);
         }
@@ -52,7 +52,7 @@ public class LeaveService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            LeaveResponse lr=new LeaveResponse();
+            LeaveListResponse lr=new LeaveListResponse();
             lr.setAl(arrll);
             lr.setMessage("Details of leaves for the given from_date found");
             return ResponseEntity.status(HttpStatus.OK).body(lr);
@@ -76,7 +76,7 @@ public class LeaveService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            LeaveResponse lr=new LeaveResponse();
+            LeaveListResponse lr=new LeaveListResponse();
             lr.setAl(arrll);
             lr.setMessage("Details of leaves for the given to_date found");
             return ResponseEntity.status(HttpStatus.OK).body(lr);
@@ -100,7 +100,7 @@ public class LeaveService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            LeaveResponse lr=new LeaveResponse();
+            LeaveListResponse lr=new LeaveListResponse();
             lr.setAl(arrll);
             lr.setMessage("Details of leaves for the given status found");
             return ResponseEntity.status(HttpStatus.OK).body(lr);
@@ -124,18 +124,18 @@ public class LeaveService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            LeaveResponse lr=new LeaveResponse();
+            LeaveListResponse lr=new LeaveListResponse();
             lr.setAl(arrll);
             lr.setMessage("Details of leaves for the given empid found");
             return ResponseEntity.status(HttpStatus.OK).body(lr);
         }
     }
 
-    public ResponseEntity<LeaveResponse> getAllLeaveDetails(){
+    public ResponseEntity<LeaveListResponse> getAllLeaveDetails(){
         List<Leave> ll=leaveRepository.findAll();
         ArrayList<Leave> all=new ArrayList<>(ll);
 
-        LeaveResponse lr=new LeaveResponse(all);
+        LeaveListResponse lr=new LeaveListResponse(all);
         lr.setMessage("All leave details found");
         return ResponseEntity.status(HttpStatus.OK).body(lr);
     }
@@ -149,7 +149,7 @@ public class LeaveService {
         }
         else{
             leaveRepository.save(leave);
-            LeaveResponse lr=new LeaveResponse();
+            LeaveListResponse lr=new LeaveListResponse();
             lr.getAl().add(leave);
             lr.setMessage("New leave entry created");
             return ResponseEntity.status(HttpStatus.CREATED).body(lr);
