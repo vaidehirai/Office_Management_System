@@ -3,6 +3,7 @@ package com.oms.officemanagementsystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -138,6 +139,29 @@ public class LeaveService {
         LeaveListResponse lr=new LeaveListResponse(all);
         lr.setMessage("All leave details found");
         return ResponseEntity.status(HttpStatus.OK).body(lr);
+    }
+
+    public ResponseEntity<APIResponse> getCountOfLeavesByEmployee(Integer empid){
+        List<Leave> ll=leaveRepository.findAll();
+        ArrayList<Leave> all=new ArrayList<>();
+
+        for (int i=0;i<ll.size();i++){
+            if(ll.get(i).getEmpid()==empid){
+                all.add(ll.get(i));
+            }
+        }
+
+        if (all.isEmpty()){
+            APIResponse apir=new APIResponse();
+            apir.setMessage("No leaves taken by the employee");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
+        }
+        else{
+            LeaveListResponse llr=new LeaveListResponse();
+            llr.setAl(all);
+            llr.setMessage("List of leaves taken by employee with empid: "+empid);
+            return ResponseEntity.status(HttpStatus.OK).body(llr);
+        }
     }
 
     public ResponseEntity<APIResponse> insertLeaveDetails(Leave leave){

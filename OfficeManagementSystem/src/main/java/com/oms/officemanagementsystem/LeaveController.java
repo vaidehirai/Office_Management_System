@@ -45,6 +45,11 @@ public class LeaveController {
         return leaveService.getAllLeaveDetails();
     }
 
+    @GetMapping("/count-by-employee")
+    public ResponseEntity<APIResponse> getCountOfLeavesByEmployee(@RequestParam Integer empid){
+        return leaveService.getCountOfLeavesByEmployee(empid);
+    }
+
     @PostMapping
     public ResponseEntity<APIResponse> insertLeaveDetails(@RequestBody Leave leave){
         return leaveService.insertLeaveDetails(leave);
