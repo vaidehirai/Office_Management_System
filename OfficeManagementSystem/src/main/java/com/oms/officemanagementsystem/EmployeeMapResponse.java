@@ -13,5 +13,5 @@ import java.util.Map;
 
 public class EmployeeMapResponse extends APIResponse{
 
-    private Map<Integer, List<Employee>> empmap;
+    private Map<?, List<Employee>> empmap;
 }

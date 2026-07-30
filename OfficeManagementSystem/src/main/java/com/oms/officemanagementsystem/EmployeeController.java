@@ -93,6 +93,11 @@ public class EmployeeController {
         return service.getEmployeesGroupByDept();
     }
 
+    @GetMapping("/group-by-gender")
+    public ResponseEntity<EmployeeMapResponse> getEmployeesGroupByGender(){
+        return service.getEmployeesGroupByGender();
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);

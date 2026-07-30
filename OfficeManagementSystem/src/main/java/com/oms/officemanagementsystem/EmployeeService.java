@@ -250,6 +250,17 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(emr);
     }
 
+    public ResponseEntity<EmployeeMapResponse> getEmployeesGroupByGender(){
+        List<Employee> le=employeeRepository.findAll();
+        Map<String, List<Employee>> empgender=le.stream().collect(Collectors.groupingBy(Employee::getGender));
+
+        EmployeeMapResponse emr=new EmployeeMapResponse();
+        emr.setEmpmap(empgender);
+        emr.setMessage("List of employees grouped by gender");
+        return ResponseEntity.status(HttpStatus.OK).body(emr);
+
+    }
+
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 
         if(employee.getEmpid()==null || employee.getName()==null || employee.getAge()==null || employee.getGender()==null || employee.getAddress()==null || employee.getTelephoneno()==null || employee.getAnnualincome()==null || employee.getDeptid()==null || employee.getProjectid()==null){
