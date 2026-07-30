@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -113,6 +115,17 @@ public class ProjectService {
         pr.setAlp(alp);
         pr.setMessage("All project details found");
         return  ResponseEntity.status(HttpStatus.OK).body(pr);
+    }
+
+    public ResponseEntity<ProjectMapResponse> getProjectGroupByDept(){
+        List<Project> lp=repository.findAll();
+
+        Map<Integer, List<Project>> projdept=lp.stream().collect(Collectors.groupingBy(Project::getDeptid));
+
+        ProjectMapResponse pmr=new ProjectMapResponse(projdept);
+        pmr.setMessage("List of projects grouped by department");
+        return ResponseEntity.status(HttpStatus.OK).body(pmr);
+
     }
 
     public ResponseEntity<APIResponse> createProject(Project project){

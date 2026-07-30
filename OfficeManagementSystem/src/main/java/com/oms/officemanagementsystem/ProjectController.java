@@ -40,6 +40,11 @@ public class ProjectController {
         return service.getAllProjectDetails();
     }
 
+    @GetMapping("/group-by-department")
+    public ResponseEntity<ProjectMapResponse> getProjectGroupByDept(){
+        return service.getProjectGroupByDept();
+    }
+
     @PostMapping
     public ResponseEntity<APIResponse> createProject(@RequestBody Project project){
         return service.createProject(project);
