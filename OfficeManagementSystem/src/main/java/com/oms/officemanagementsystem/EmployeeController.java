@@ -88,6 +88,11 @@ public class EmployeeController {
         return service.getCountByGender(gender);
     }
 
+    @GetMapping("/group-by-department")
+    public ResponseEntity<EmployeeMapResponse> getEmployeesGroupByDept(){
+        return service.getEmployeesGroupByDept();
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);
