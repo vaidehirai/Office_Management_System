@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AssetService {
@@ -113,6 +115,16 @@ public class AssetService {
         ar.setAssetlist(ala);
         ar.setMessage("All assets found");
         return ResponseEntity.status(HttpStatus.OK).body(ar);
+    }
+
+    public ResponseEntity<AssetMapResponse> getAssetGroupByEmployee(){
+        List<Asset> la=repository.findAll();
+
+        Map<Integer, List<Asset>> asemp=la.stream().collect(Collectors.groupingBy(Asset::getEmpid));
+
+        AssetMapResponse amr=new AssetMapResponse(asemp);
+        amr.setMessage("List of asssets grouped by employees");
+        return ResponseEntity.status(HttpStatus.OK).body(amr);
     }
 
     public  ResponseEntity<APIResponse> createAsset(Asset asset){
