@@ -269,6 +269,14 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(stats);
     }
 
+    public ResponseEntity<String> getEmployeeNamesConcatenated(){
+        List<Employee> le=employeeRepository.findAll();
+
+        String empnames=le.stream().map(Employee::getName).collect(Collectors.joining(","));
+
+        return ResponseEntity.status(HttpStatus.OK).body(empnames);
+    }
+
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 
         if(employee.getEmpid()==null || employee.getName()==null || employee.getAge()==null || employee.getGender()==null || employee.getAddress()==null || employee.getTelephoneno()==null || employee.getAnnualincome()==null || employee.getDeptid()==null || employee.getProjectid()==null){

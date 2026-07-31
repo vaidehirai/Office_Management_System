@@ -105,6 +105,11 @@ public class EmployeeController {
         return service.getEmployeeSalarySummary();
     }
 
+    @GetMapping("/names-string")
+    public ResponseEntity<String> getEmployeeNamesConcatenated(){
+        return service.getEmployeeNamesConcatenated();
+    }
+
     @PostMapping
     public  ResponseEntity<APIResponse> createEmployee(@RequestBody Employee employee){
         return service.createEmployee(employee);
