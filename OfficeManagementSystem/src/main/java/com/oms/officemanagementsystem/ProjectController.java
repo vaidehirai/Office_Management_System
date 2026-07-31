@@ -36,8 +36,13 @@ public class ProjectController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ProjectResponse> getAllProjectDetails(){
+    public ResponseEntity<ProjectListResponse> getAllProjectDetails(){
         return service.getAllProjectDetails();
+    }
+
+    @GetMapping("/group-by-department")
+    public ResponseEntity<ProjectMapResponse> getProjectGroupByDept(){
+        return service.getProjectGroupByDept();
     }
 
     @PostMapping

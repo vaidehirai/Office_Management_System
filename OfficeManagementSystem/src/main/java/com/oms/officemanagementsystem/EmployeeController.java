@@ -3,6 +3,8 @@ package com.oms.officemanagementsystem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.DoubleSummaryStatistics;
+
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -29,37 +31,37 @@ public class EmployeeController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<EmployeeResponse> getAllEmployeeData(){
+    public ResponseEntity<EmployeeListResponse> getAllEmployeeData(){
         return service.getAllEmployeeData();
     }
 
     @GetMapping("/salary")
-    public ResponseEntity<EmployeeResponse> getMinSalary(@RequestParam Integer minSalary){
-        return service.getMinSalary(minSalary);
+    public ResponseEntity<EmployeeListResponse> getSalaryAboveMinSalary(@RequestParam Integer minSalary){
+        return service.getSalaryAboveMinSalary(minSalary);
     }
 
     @GetMapping("/age")
-    public ResponseEntity<EmployeeResponse> getMinMaxAge(@RequestParam Integer min, Integer max){
-        return service.getMinMaxAge(min, max);
+    public ResponseEntity<EmployeeListResponse> getEmployeesBetweenMinMaxAge(@RequestParam Integer min, Integer max){
+        return service.getEmployeesBetweenMinMaxAge(min, max);
     }
 
     @GetMapping("/salary/sort")
-    public ResponseEntity<EmployeeResponse> getSalarySort(){
+    public ResponseEntity<EmployeeListResponse> getSalarySort(){
         return service.getSalarySort();
     }
 
     @GetMapping("/top-salary")
-    public ResponseEntity<EmployeeResponse> getTopSalary(@RequestParam Integer count){
-        return service.getTopSalary(count);
+    public ResponseEntity<EmployeeListResponse> getTopSalaryEmployees(@RequestParam Integer count){
+        return service.getTopSalaryEmployees(count);
     }
 
     @GetMapping("/youngest")
-    public ResponseEntity<EmployeeResponse> getYoungestEmployee(){
+    public ResponseEntity<APIResponse> getYoungestEmployee(){
         return service.getYoungestEmployee();
     }
 
     @GetMapping("/oldest")
-    public ResponseEntity<EmployeeResponse> getOldestEmployee(){
+    public ResponseEntity<APIResponse> getOldestEmployee(){
         return service.getOldestEmployee();
     }
 
@@ -71,6 +73,41 @@ public class EmployeeController {
     @GetMapping("/adults")
     public ResponseEntity<APIResponse> getAdults(){
         return service.getAdults();
+    }
+
+    @GetMapping("/names")
+    public ResponseEntity<StListResponse> getEmployeeNames(){
+        return service.getEmployeeNames();
+    }
+
+    @GetMapping("/distinct-ages")
+    public ResponseEntity<IntListResponse> getEmployeesDistinctAges(){
+        return service.getEmployeesDistinctAges();
+    }
+
+    @GetMapping("/count-by-gender")
+    public ResponseEntity<LongResponse> getCountByGender(@RequestParam String gender){
+        return service.getCountByGender(gender);
+    }
+
+    @GetMapping("/group-by-department")
+    public ResponseEntity<EmployeeMapResponse> getEmployeesGroupByDept(){
+        return service.getEmployeesGroupByDept();
+    }
+
+    @GetMapping("/group-by-gender")
+    public ResponseEntity<EmployeeMapResponse> getEmployeesGroupByGender(){
+        return service.getEmployeesGroupByGender();
+    }
+
+    @GetMapping("/salary/statistics")
+    public ResponseEntity<DoubleSummaryStatistics> getEmployeeSalarySummary(){
+        return service.getEmployeeSalarySummary();
+    }
+
+    @GetMapping("/names-string")
+    public ResponseEntity<String> getEmployeeNamesConcatenated(){
+        return service.getEmployeeNamesConcatenated();
     }
 
     @PostMapping

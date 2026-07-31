@@ -4,12 +4,9 @@ package com.oms.officemanagementsystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 //This class in querying the database. No SElECT* type queries are required to query database.
 //VSCode is simply used to check if the queries have been implemented successfully or not.
@@ -18,19 +15,21 @@ import java.util.Optional;
 @Service
 public class EmployeeService {
 
-    private final EmployeeRepository repository;
+    private final EmployeeRepository employeeRepository;
+    //private final DepartmentRepository departmentRepository;
 
-    public EmployeeService(EmployeeRepository repository) {
-        this.repository = repository;
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+        //this.departmentRepository=departmentRepository;
     }
 
     public ResponseEntity<APIResponse> getEmployeeData(int id) {
-        Optional<Employee> emp = repository.findById(id);
+        Optional<Employee> emp = employeeRepository.findById(id);
 
         if (emp.isPresent()) {
             Employee e=emp.get();
             EmployeeResponse er = new EmployeeResponse();
-            er.getAle().add(e);
+            er.setEmployee(e);
             er.setMessage("Employee details found");
             return ResponseEntity.status(HttpStatus.OK).body(er);
         } else {
@@ -40,8 +39,8 @@ public class EmployeeService {
 
     public ResponseEntity<APIResponse> getEmployeeDataDeptid(Integer deptid){
         ArrayList<Employee> aemp=new ArrayList<>();
-        for(int i=1;i<=repository.count();i++){
-            Optional<Employee> emp=repository.findById(i);
+        for(int i = 1; i<= employeeRepository.count(); i++){
+            Optional<Employee> emp= employeeRepository.findById(i);
             Employee e=emp.get();
             if(e.getDeptid()==deptid){
                 aemp.add(e);
@@ -54,7 +53,7 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            EmployeeResponse er=new EmployeeResponse();
+            EmployeeListResponse er=new EmployeeListResponse();
             er.setAle(aemp);
             er.setMessage("Employees with given department id found");
             return ResponseEntity.status(HttpStatus.OK).body(er);
@@ -63,8 +62,8 @@ public class EmployeeService {
 
     public ResponseEntity<APIResponse> getEmployeeDataProjectid(Integer projectid){
         ArrayList<Employee> aemp=new ArrayList<>();
-        for(int i=1;i<=repository.count();i++){
-            Optional<Employee> emp=repository.findById(i);
+        for(int i = 1; i<= employeeRepository.count(); i++){
+            Optional<Employee> emp= employeeRepository.findById(i);
             Employee e=emp.get();
             if(e.getProjectid()==projectid){
                 aemp.add(e);
@@ -77,96 +76,110 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            EmployeeResponse er=new EmployeeResponse();
+            EmployeeListResponse er=new EmployeeListResponse();
             er.setAle(aemp);
             er.setMessage("Employees with given project id found");
             return ResponseEntity.status(HttpStatus.OK).body(er);
         }
     }
 
-    public ResponseEntity<EmployeeResponse> getAllEmployeeData(){
-        List<Employee> le=repository.findAll();
+    public ResponseEntity<EmployeeListResponse> getAllEmployeeData(){
+        List<Employee> le= employeeRepository.findAll();
         ArrayList<Employee> ale=new ArrayList<>(le);
 
-        EmployeeResponse er=new EmployeeResponse(ale);
+        EmployeeListResponse er=new EmployeeListResponse();
+        er.setAle(ale);
         er.setMessage("All employee details found");
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getMinSalary(Integer minSalary){
-        List<Employee> le=repository.findAll();
+    public ResponseEntity<EmployeeListResponse> getSalaryAboveMinSalary(Integer minSalary){
+        List<Employee> le= employeeRepository.findAll();
         ArrayList<Employee> ale=new ArrayList<>();
 
         le.stream().filter(emp -> emp.getAnnualincome()>=minSalary).forEach(emp -> ale.add(emp));
 
-        EmployeeResponse er=new EmployeeResponse();
+        EmployeeListResponse er=new EmployeeListResponse();
         er.setAle(ale);
         er.setMessage("These are the employees with salary >= "+minSalary);
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getMinMaxAge(Integer minage, Integer maxage){
-        List<Employee> le=repository.findAll();
+    public ResponseEntity<EmployeeListResponse> getEmployeesBetweenMinMaxAge(Integer minage, Integer maxage){
+        List<Employee> le= employeeRepository.findAll();
         ArrayList<Employee> ale=new ArrayList<>();
 
         le.stream().filter(emp -> emp.getAge()>=minage && emp.getAge()<=maxage).forEach(emp -> ale.add(emp));
 
-        EmployeeResponse er=new EmployeeResponse();
+        EmployeeListResponse er=new EmployeeListResponse();
         er.setAle(ale);
         er.setMessage("These are the employees with age between "+minage+" and "+maxage);
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getSalarySort(){
-        List<Employee> le=repository.findAll();
+    public ResponseEntity<EmployeeListResponse> getSalarySort(){
+        List<Employee> le= employeeRepository.findAll();
         ArrayList<Employee> ale=new ArrayList<>();
 
         le.stream().sorted(Comparator.comparingDouble(emp -> emp.getAnnualincome())).forEach(emp-> ale.add(emp));
 
-        EmployeeResponse er=new EmployeeResponse();
+        EmployeeListResponse er=new EmployeeListResponse();
         er.setAle(ale);
         er.setMessage("Employees list with salary in sorted order");
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getTopSalary(Integer count){
-        List<Employee> le=repository.findAll();
+    public ResponseEntity<EmployeeListResponse> getTopSalaryEmployees(Integer count){
+        List<Employee> le= employeeRepository.findAll();
         ArrayList<Employee> ale=new ArrayList<>();
 
         le.stream().sorted(Comparator.comparingDouble(Employee::getAnnualincome).reversed()).limit(count).forEach(emp-> ale.add(emp));
 
-        EmployeeResponse er=new EmployeeResponse();
+        EmployeeListResponse er=new EmployeeListResponse();
         er.setAle(ale);
         er.setMessage("Employees list with top "+count+" salary");
         return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getYoungestEmployee(){
-        List<Employee> le=repository.findAll();
+    public ResponseEntity<APIResponse> getYoungestEmployee(){
+        List<Employee> le= employeeRepository.findAll();
 
         Optional<Employee> emp=le.stream().min(Comparator.comparing(Employee::getAge));
-        Employee e=emp.get();
+        if(emp.isPresent()){
+            Employee e=emp.get();
+            EmployeeResponse er=new EmployeeResponse();
+            er.setEmployee(e);
+            er.setMessage("This is the youngest employee");
+            return ResponseEntity.status(HttpStatus.OK).body(er);
+        }
+        else{
+            APIResponse apir=new APIResponse();
+            apir.setMessage("There is no youngest employee");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
+        }
 
-        EmployeeResponse er=new EmployeeResponse();
-        er.getAle().add(e);
-        er.setMessage("This is the youngest employee");
-        return ResponseEntity.status(HttpStatus.OK).body(er);
     }
 
-    public ResponseEntity<EmployeeResponse> getOldestEmployee(){
-        List<Employee> le=repository.findAll();
+    public ResponseEntity<APIResponse> getOldestEmployee(){
+        List<Employee> le= employeeRepository.findAll();
 
         Optional<Employee> emp=le.stream().max(Comparator.comparing(Employee::getAge));
-        Employee e=emp.get();
-
-        EmployeeResponse er=new EmployeeResponse();
-        er.getAle().add(e);
-        er.setMessage("This is the oldest employee");
-        return ResponseEntity.status(HttpStatus.OK).body(er);
+        if(emp.isPresent()){
+            Employee e=emp.get();
+            EmployeeResponse er=new EmployeeResponse();
+            er.setEmployee(e);
+            er.setMessage("This is the oldest employee");
+            return ResponseEntity.status(HttpStatus.OK).body(er);
+        }
+        else{
+            APIResponse apir=new APIResponse();
+            apir.setMessage("There is no oldest employee");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
+        }
     }
 
     public ResponseEntity<APIResponse> getHighEarner(Integer salary){
-        List<Employee> le=repository.findAll();
+        List<Employee> le= employeeRepository.findAll();
 
         boolean result=le.stream().anyMatch(emp->emp.getAnnualincome().equals(salary));
         APIResponse apir=new APIResponse();
@@ -181,11 +194,11 @@ public class EmployeeService {
     }
 
     public ResponseEntity<APIResponse> getAdults(){
-        List<Employee> le=repository.findAll();
+        List<Employee> le= employeeRepository.findAll();
 
         boolean result=le.stream().allMatch(emp -> emp.getAge()>=18);
         APIResponse apir=new APIResponse();
-        if(result==true){
+        if(result){
             apir.setMessage("All employees are adults");
             return ResponseEntity.status(HttpStatus.OK).body(apir);
         }
@@ -193,6 +206,75 @@ public class EmployeeService {
             apir.setMessage("All employees are not adults");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
+    }
+
+    public ResponseEntity<StListResponse> getEmployeeNames(){
+        List<Employee> le= employeeRepository.findAll();
+        List<String> l=le.stream().map(emp->emp.getName().toUpperCase()).toList();
+
+        StListResponse str=new StListResponse();
+        str.setItems(l);
+        str.setMessage("Employee names list");
+        return ResponseEntity.status(HttpStatus.OK).body(str);
+    }
+
+    public ResponseEntity<IntListResponse> getEmployeesDistinctAges(){
+        List<Employee> le= employeeRepository.findAll();
+        List<Integer> li=le.stream().map(Employee::getAge).distinct().toList();
+
+        IntListResponse ilr=new IntListResponse();
+        ilr.setLint(li);
+        ilr.setMessage("List of distinct age of employees");
+        return ResponseEntity.status(HttpStatus.OK).body(ilr);
+    }
+
+    public ResponseEntity<LongResponse> getCountByGender(String gender){
+        List<Employee> le= employeeRepository.findAll();
+
+        Long gendercount=le.stream().filter(emp->emp.getGender().equals(gender)).count();
+
+        LongResponse lr=new LongResponse();
+        lr.setCount(gendercount);
+        lr.setMessage("No. of "+gender+" employees are: "+gendercount);
+        return ResponseEntity.status(HttpStatus.OK).body(lr);
+    }
+
+    public ResponseEntity<EmployeeMapResponse> getEmployeesGroupByDept(){
+        List<Employee> le= employeeRepository.findAll();
+
+        Map<Integer, List<Employee>> deptemp=le.stream().collect(Collectors.groupingBy(Employee::getDeptid));
+
+        EmployeeMapResponse emr=new EmployeeMapResponse();
+        emr.setEmpmap(deptemp);
+        emr.setMessage("List of employees grouped by department id");
+        return ResponseEntity.status(HttpStatus.OK).body(emr);
+    }
+
+    public ResponseEntity<EmployeeMapResponse> getEmployeesGroupByGender(){
+        List<Employee> le=employeeRepository.findAll();
+        Map<String, List<Employee>> empgender=le.stream().collect(Collectors.groupingBy(Employee::getGender));
+
+        EmployeeMapResponse emr=new EmployeeMapResponse();
+        emr.setEmpmap(empgender);
+        emr.setMessage("List of employees grouped by gender");
+        return ResponseEntity.status(HttpStatus.OK).body(emr);
+
+    }
+
+    public ResponseEntity<DoubleSummaryStatistics> getEmployeeSalarySummary(){
+        List<Employee> le=employeeRepository.findAll();
+
+        DoubleSummaryStatistics stats=le.stream().collect(Collectors.summarizingDouble(Employee::getAnnualincome));
+
+        return ResponseEntity.status(HttpStatus.OK).body(stats);
+    }
+
+    public ResponseEntity<String> getEmployeeNamesConcatenated(){
+        List<Employee> le=employeeRepository.findAll();
+
+        String empnames=le.stream().map(Employee::getName).collect(Collectors.joining(","));
+
+        return ResponseEntity.status(HttpStatus.OK).body(empnames);
     }
 
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
@@ -203,16 +285,16 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            repository.save(employee);
+            employeeRepository.save(employee);
             EmployeeResponse er = new EmployeeResponse();
-            er.getAle().add(employee);
+            er.setEmployee(employee);
             er.setMessage("Employee created");
             return ResponseEntity.status(HttpStatus.CREATED).body(er);
         }
     }
 
     public ResponseEntity<APIResponse> updateEmployee (Employee employee){
-        Optional<Employee> e1 = repository.findById(employee.getEmpid());
+        Optional<Employee> e1 = employeeRepository.findById(employee.getEmpid());
 
         if (e1.isPresent()) {
             Employee e2 = e1.get();
@@ -225,9 +307,9 @@ public class EmployeeService {
             e2.setDeptid(employee.getDeptid());
             e2.setProjectid(employee.getProjectid());
 
-            repository.save(e2);
+            employeeRepository.save(e2);
             EmployeeResponse er=new EmployeeResponse();
-            er.getAle().add(e2);
+            er.setEmployee(e2);
             er.setMessage("Employee updated");
             return ResponseEntity.status(HttpStatus.OK).body(er);
         }
@@ -239,10 +321,10 @@ public class EmployeeService {
     }
 
     public ResponseEntity<APIResponse> deleteEmployee (Employee employee){
-        Optional<Employee> e1 = repository.findById(employee.getEmpid());
+        Optional<Employee> e1 = employeeRepository.findById(employee.getEmpid());
         if (e1.isPresent()){
             Employee e = e1.get();
-            repository.delete(e);
+            employeeRepository.delete(e);
             //return "Employee with id "+employee.getId()+" deleted";
             APIResponse ar = new APIResponse("Employee with id " + employee.getEmpid() + " deleted");
             return ResponseEntity.status(HttpStatus.OK).body(ar);

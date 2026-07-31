@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -25,7 +27,7 @@ public class ProjectService {
             Project p=project.get();
 
             ProjectResponse pr=new ProjectResponse();
-            pr.getAlp().add(p);
+            pr.setProject(p);
             pr.setMessage("Project details found");
             return ResponseEntity.status(HttpStatus.OK).body(pr);
         }
@@ -52,7 +54,7 @@ public class ProjectService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            ProjectResponse pr=new ProjectResponse();
+            ProjectListResponse pr=new ProjectListResponse();
             pr.setAlp(alp);
             pr.setMessage("Projects with given start date found");
             return ResponseEntity.status(HttpStatus.OK).body(pr);
@@ -75,7 +77,7 @@ public class ProjectService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            ProjectResponse pr=new ProjectResponse();
+            ProjectListResponse pr=new ProjectListResponse();
             pr.setAlp(alp);
             pr.setMessage("Projects with given end date found");
             return ResponseEntity.status(HttpStatus.OK).body(pr);
@@ -98,21 +100,32 @@ public class ProjectService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apir);
         }
         else{
-            ProjectResponse pr=new ProjectResponse();
+            ProjectListResponse pr=new ProjectListResponse();
             pr.setAlp(alp);
             pr.setMessage("Projects with given deptid found");
             return ResponseEntity.status(HttpStatus.OK).body(pr);
         }
     }
 
-    public ResponseEntity<ProjectResponse> getAllProjectDetails(){
+    public ResponseEntity<ProjectListResponse> getAllProjectDetails(){
         List<Project> lp=repository.findAll();
         ArrayList<Project> alp=new ArrayList<>(lp);
 
-        ProjectResponse pr=new ProjectResponse();
+        ProjectListResponse pr=new ProjectListResponse();
         pr.setAlp(alp);
         pr.setMessage("All project details found");
         return  ResponseEntity.status(HttpStatus.OK).body(pr);
+    }
+
+    public ResponseEntity<ProjectMapResponse> getProjectGroupByDept(){
+        List<Project> lp=repository.findAll();
+
+        Map<Integer, List<Project>> projdept=lp.stream().collect(Collectors.groupingBy(Project::getDeptid));
+
+        ProjectMapResponse pmr=new ProjectMapResponse(projdept);
+        pmr.setMessage("List of projects grouped by department");
+        return ResponseEntity.status(HttpStatus.OK).body(pmr);
+
     }
 
     public ResponseEntity<APIResponse> createProject(Project project){
@@ -125,7 +138,7 @@ public class ProjectService {
         else{
             repository.save(project);
             ProjectResponse pr2=new ProjectResponse();
-            pr2.getAlp().add(project);
+            pr2.setProject(project);
             pr2.setMessage("New project added");
             return ResponseEntity.status(HttpStatus.CREATED).body(pr2);
         }
@@ -144,7 +157,7 @@ public class ProjectService {
             repository.save(p2);
 
             ProjectResponse pr=new ProjectResponse();
-            pr.getAlp().add(p2);
+            pr.setProject(p2);
             pr.setMessage("Project details updated");
             return ResponseEntity.status(HttpStatus.OK).body(pr);
         }

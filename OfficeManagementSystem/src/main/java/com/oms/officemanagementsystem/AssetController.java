@@ -34,8 +34,18 @@ public class AssetController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<AssetResponse> getAllAssets(){
+    public ResponseEntity<AssetListResponse> getAllAssets(){
         return service.getAllAssets();
+    }
+
+    @GetMapping("/group-by-employee")
+    public ResponseEntity<AssetMapResponse> getAssetGroupByEmployee(){
+        return service.getAssetGroupByEmployee();
+    }
+
+    @GetMapping("/value-by-employee")
+    public ResponseEntity<PriMapResponse> getValueOfAssetsPerEmployee(){
+        return service.getValueOfAssetsPerEmployee();
     }
 
     @PostMapping

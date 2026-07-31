@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 
-public class LeaveResponse extends APIResponse{
+public class EmployeeListResponse extends APIResponse{
 
-    private Leave leave;
+    private ArrayList<Employee> ale;
+
 }

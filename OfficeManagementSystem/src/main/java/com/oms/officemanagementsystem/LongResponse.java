@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class LeaveResponse extends APIResponse{
+public class LongResponse extends APIResponse{
 
-    private Leave leave;
+    private long count;
 }

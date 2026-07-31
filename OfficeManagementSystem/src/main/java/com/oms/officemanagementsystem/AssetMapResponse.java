@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class LeaveResponse extends APIResponse{
+public class AssetMapResponse extends APIResponse{
 
-    private Leave leave;
+    Map<?, List<Asset>> asmap;
 }
