@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
@@ -114,6 +116,17 @@ public class DepartmentService {
         lr.setCount(empcount);
         lr.setMessage("Count of employees belonging to given department id");
         return ResponseEntity.status(HttpStatus.OK).body(lr);
+    }
+
+    public ResponseEntity<PriMapResponse> getDepartmentWiseAverageSalary(){
+        List<Employee> le=emprepository.findAll();
+
+        Map<Integer, Double> avgsalmap=le.stream().collect(Collectors.groupingBy(Employee::getDeptid,
+                Collectors.averagingDouble(Employee::getAnnualincome)));
+
+        PriMapResponse pmr=new PriMapResponse(avgsalmap);
+        pmr.setMessage("Department wise average salary");
+        return ResponseEntity.status(HttpStatus.OK).body(pmr);
     }
 
     public ResponseEntity<APIResponse> createDepartment(Department dept){
