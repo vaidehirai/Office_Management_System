@@ -13,14 +13,16 @@ import java.util.stream.Collectors;
 @Service
 public class AssetService {
 
-    public AssetRepository repository;
+    public AssetRepository assetRepository;
+    public EmployeeRepository employeeRepository;
 
-    public AssetService(AssetRepository repository){
-        this.repository=repository;
+    public AssetService(AssetRepository assetRepository, EmployeeRepository employeeRepository){
+        this.assetRepository =assetRepository;
+        this.employeeRepository=employeeRepository;
     }
 
     public ResponseEntity<APIResponse> getAssetDetailsAssetid(Integer id){
-        Optional<Asset> a1= repository.findById(id);
+        Optional<Asset> a1= assetRepository.findById(id);
 
         if(a1.isPresent()){
             AssetResponse ar=new AssetResponse();
@@ -37,8 +39,8 @@ public class AssetService {
 
     public ResponseEntity<APIResponse> getAssetDetailsAssetname(String assetname){
         ArrayList<Asset> ala=new ArrayList<>();
-        for(int i=101;i<= 100+repository.count();i++){
-            Optional<Asset> a1=repository.findById(i);
+        for(int i = 101; i<= 100+ assetRepository.count(); i++){
+            Optional<Asset> a1= assetRepository.findById(i);
             Asset a2=a1.get();
             if(a2.getAssetname().equals(assetname)){
                 ala.add(a2);
@@ -60,8 +62,8 @@ public class AssetService {
 
     public ResponseEntity<APIResponse> getAssetDetailsAssetvalue(Integer assetvalue){
         ArrayList<Asset> ala=new ArrayList<>();
-        for(int i=101;i<= 100+repository.count();i++){
-            Optional<Asset> a1=repository.findById(i);
+        for(int i = 101; i<= 100+ assetRepository.count(); i++){
+            Optional<Asset> a1= assetRepository.findById(i);
             Asset a2=a1.get();
 
             if(a2.getAssetvalue().equals(assetvalue)){
@@ -85,8 +87,8 @@ public class AssetService {
     //Details of assets that an employee owns
     public ResponseEntity<APIResponse> getAssetDetailsOfEmpid(Integer empid){
         ArrayList<Asset> ala=new ArrayList<>();
-        for(int i=101;i<= 100+repository.count();i++){
-            Optional<Asset> a1=repository.findById(i);
+        for(int i = 101; i<= 100+ assetRepository.count(); i++){
+            Optional<Asset> a1= assetRepository.findById(i);
             Asset a2=a1.get();
             if(a2.getEmpid()==empid){
                 ala.add(a2);
@@ -108,7 +110,7 @@ public class AssetService {
 
     public ResponseEntity<AssetListResponse> getAllAssets(){
 
-        List<Asset> la=repository.findAll();
+        List<Asset> la= assetRepository.findAll();
         ArrayList<Asset> ala=new ArrayList<>(la);
 
         AssetListResponse ar=new AssetListResponse();
@@ -118,13 +120,24 @@ public class AssetService {
     }
 
     public ResponseEntity<AssetMapResponse> getAssetGroupByEmployee(){
-        List<Asset> la=repository.findAll();
+        List<Asset> la= assetRepository.findAll();
 
         Map<Integer, List<Asset>> asemp=la.stream().collect(Collectors.groupingBy(Asset::getEmpid));
 
         AssetMapResponse amr=new AssetMapResponse(asemp);
         amr.setMessage("List of asssets grouped by employees");
         return ResponseEntity.status(HttpStatus.OK).body(amr);
+    }
+
+    public ResponseEntity<PriMapResponse> getValueOfAssetsPerEmployee(){
+        List<Asset> le=assetRepository.findAll();
+
+        Map<Integer, Double> empAssetValue=le.stream().collect(Collectors.groupingBy(Asset::getEmpid,
+                Collectors.summingDouble(Asset::getAssetvalue)));
+
+        PriMapResponse pmr=new PriMapResponse(empAssetValue);
+        pmr.setMessage("List of employees and total value of assets they own");
+        return ResponseEntity.status(HttpStatus.OK).body(pmr);
     }
 
     public  ResponseEntity<APIResponse> createAsset(Asset asset){
@@ -135,7 +148,7 @@ public class AssetService {
             return ResponseEntity.status(HttpStatus.OK).body(apir);
         }
         else{
-            repository.save(asset);
+            assetRepository.save(asset);
             AssetResponse ar=new AssetResponse();
             ar.setAsset(asset);
             ar.setMessage("New asset entry created");
@@ -144,7 +157,7 @@ public class AssetService {
     }
 
     public ResponseEntity<APIResponse> updateAssetName(Asset asset){
-        Optional<Asset> asset1=repository.findById(asset.assetid);
+        Optional<Asset> asset1= assetRepository.findById(asset.assetid);
 
         APIResponse apir=new APIResponse();
         if(asset1.isPresent()){
@@ -154,7 +167,7 @@ public class AssetService {
             asset2.setAssetname(asset.getAssetname());
             asset2.setAssetvalue(asset.getAssetvalue());
             asset2.setEmpid(asset.getEmpid());
-            repository.save(asset2);
+            assetRepository.save(asset2);
             apir.setMessage("Asset with given id updated");
             return ResponseEntity.status(HttpStatus.OK).body(apir);
         }
@@ -165,11 +178,11 @@ public class AssetService {
     }
 
     public ResponseEntity<APIResponse> deleteAsset(Asset asset){
-        Optional<Asset> asset1=repository.findById(asset.assetid);
+        Optional<Asset> asset1= assetRepository.findById(asset.assetid);
         APIResponse apir=new APIResponse();
 
         if(asset1.isPresent()){
-            repository.delete(asset1.get());
+            assetRepository.delete(asset1.get());
             apir.setMessage("Asset with given id deleted");
             return ResponseEntity.status(HttpStatus.OK).body(apir);
         }

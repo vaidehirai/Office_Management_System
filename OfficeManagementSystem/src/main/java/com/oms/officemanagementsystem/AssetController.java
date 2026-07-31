@@ -43,6 +43,11 @@ public class AssetController {
         return service.getAssetGroupByEmployee();
     }
 
+    @GetMapping("/value-by-employee")
+    public ResponseEntity<PriMapResponse> getValueOfAssetsPerEmployee(){
+        return service.getValueOfAssetsPerEmployee();
+    }
+
     @PostMapping
     public ResponseEntity<APIResponse> createAsset(@RequestBody Asset asset){
         return service.createAsset(asset);
