@@ -129,6 +129,17 @@ public class DepartmentService {
         return ResponseEntity.status(HttpStatus.OK).body(pmr);
     }
 
+    public ResponseEntity<PriMapResponse> getDepartmentWiseTotalSalary(){
+        List<Employee> le=emprepository.findAll();
+
+        Map<Integer, Double> deptsumsal=le.stream().collect(Collectors.groupingBy(Employee::getDeptid,
+                Collectors.summingDouble(Employee::getAnnualincome)));
+
+        PriMapResponse pmr=new PriMapResponse(deptsumsal);
+        pmr.setMessage("Department wise total salary");
+        return ResponseEntity.status(HttpStatus.OK).body(pmr);
+    }
+
     public ResponseEntity<APIResponse> createDepartment(Department dept){
 
         if(dept.getDeptid()==null || dept.getName()==null || dept.getCode()==null){

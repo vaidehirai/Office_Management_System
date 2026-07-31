@@ -48,6 +48,11 @@ public class DepartmentController {
         return deptservice.getDepartmentWiseAverageSalary();
     }
 
+    @GetMapping("/total-salary")
+    public ResponseEntity<PriMapResponse> getDepartmentWiseTotalSalary(){
+        return deptservice.getDepartmentWiseTotalSalary();
+    }
+
     @PostMapping
     public ResponseEntity<APIResponse> createDepartment(@RequestBody Department dept){
         return deptservice.createDepartment(dept);
