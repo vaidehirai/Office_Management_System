@@ -140,6 +140,16 @@ public class DepartmentService {
         return ResponseEntity.status(HttpStatus.OK).body(pmr);
     }
 
+    public ResponseEntity<Map<Integer, List<String>>> getDepartmentWiseEmployeeNames(){
+        List<Employee> le=emprepository.findAll();
+
+        Map<Integer, List<String>> deptEmpList=le.stream().collect(Collectors.groupingBy(Employee::getDeptid,
+                Collectors.mapping(Employee::getName,
+                        Collectors.toList())));
+
+        return ResponseEntity.status(HttpStatus.OK).body(deptEmpList);
+    }
+
     public ResponseEntity<APIResponse> createDepartment(Department dept){
 
         if(dept.getDeptid()==null || dept.getName()==null || dept.getCode()==null){

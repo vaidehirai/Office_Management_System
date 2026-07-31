@@ -3,6 +3,9 @@ package com.oms.officemanagementsystem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
@@ -51,6 +54,11 @@ public class DepartmentController {
     @GetMapping("/total-salary")
     public ResponseEntity<PriMapResponse> getDepartmentWiseTotalSalary(){
         return deptservice.getDepartmentWiseTotalSalary();
+    }
+
+    @GetMapping("/employee-names")
+    public ResponseEntity<Map<Integer, List<String>>> getDepartmentWiseEmployeeNames(){
+        return deptservice.getDepartmentWiseEmployeeNames();
     }
 
     @PostMapping
