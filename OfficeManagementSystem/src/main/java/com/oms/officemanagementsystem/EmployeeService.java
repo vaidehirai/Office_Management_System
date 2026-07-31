@@ -261,6 +261,14 @@ public class EmployeeService {
 
     }
 
+    public ResponseEntity<DoubleSummaryStatistics> getEmployeeSalarySummary(){
+        List<Employee> le=employeeRepository.findAll();
+
+        DoubleSummaryStatistics stats=le.stream().collect(Collectors.summarizingDouble(Employee::getAnnualincome));
+
+        return ResponseEntity.status(HttpStatus.OK).body(stats);
+    }
+
     public ResponseEntity<APIResponse> createEmployee (Employee employee){
 
         if(employee.getEmpid()==null || employee.getName()==null || employee.getAge()==null || employee.getGender()==null || employee.getAddress()==null || employee.getTelephoneno()==null || employee.getAnnualincome()==null || employee.getDeptid()==null || employee.getProjectid()==null){

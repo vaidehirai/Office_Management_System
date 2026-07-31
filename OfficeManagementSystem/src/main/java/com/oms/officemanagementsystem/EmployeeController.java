@@ -3,6 +3,8 @@ package com.oms.officemanagementsystem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.DoubleSummaryStatistics;
+
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -96,6 +98,11 @@ public class EmployeeController {
     @GetMapping("/group-by-gender")
     public ResponseEntity<EmployeeMapResponse> getEmployeesGroupByGender(){
         return service.getEmployeesGroupByGender();
+    }
+
+    @GetMapping("/salary/statistics")
+    public ResponseEntity<DoubleSummaryStatistics> getEmployeeSalarySummary(){
+        return service.getEmployeeSalarySummary();
     }
 
     @PostMapping
